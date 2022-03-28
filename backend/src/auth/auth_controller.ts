@@ -7,13 +7,14 @@ export class AuthController implements Controller {
   public router: express.Router;
 
   constructor() {
-    this.path = '/login';
+    this.path = '/auth';
     this.router = express.Router();
 
     this.initializeRoutes();
   }
 
   public initializeRoutes() {
-    this.router.post(this.path, authService.signIn);
+    this.router.post(this.path + '/signIn', authService.signIn);
+    this.router.post(this.path + '/signUp', authService.signUp);
   }
 }

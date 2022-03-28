@@ -20,7 +20,7 @@ export class GalleryController implements Controller {
 
   public initializeRoutes() {
     this.router
-      .route('/gallery')
+      .route(this.path)
       .all(authService.validateToken)
       .get(galleryService.getRequiredPictures)
       .post(upload.single('picture'), galleryService.createPicture);

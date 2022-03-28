@@ -41,6 +41,17 @@ class AuthService {
       res.status(config.httpStatusCodes.UNAUTHORIZED).json(unAuthorizedMessage);
     }
   };
+
+  public signUp = async (req: Request, res: Response) => {
+    const candidate: User = { email: req.body.email, password: req.body.password };
+    try {
+      await userService.create(candidate);
+      res.status(config.httpStatusCodes.CREATED).end();
+    } catch (e) {
+      const unAuthorizedMessage = { errorMessage: 'Email already exist' };
+      res.status(config.httpStatusCodes.UNAUTHORIZED).json(unAuthorizedMessage);
+    }
+  };
 }
 
 export const authService = new AuthService();
