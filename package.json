@@ -1,0 +1,22 @@
+{
+  "name": "module2_part2_node",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:stansful/module2_part2_node.git",
+  "author": "stansful <stansful@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "npm run build && npm run copy && npm run node:start",
+    "dev": "npm run build && npm run copy && npm run node:dev",
+    "node:start": "cd backend && npm run start",
+    "node:dev": "cd backend && npm run dev",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && npm install && npm run build",
+    "build:backend": "cd backend && npm install && npm run build",
+    "copy": "npm run create:frontend-folder && npm run copy:html && npm run copy:css && npm run copy:js",
+    "copy:html": "cp frontend/index.html backend/static/frontend/ && cp frontend/gallery.html backend/static/frontend/",
+    "copy:css": "cp -R frontend/css backend/static/frontend/",
+    "copy:js": "cp -R frontend/js backend/static/frontend/",
+    "create:frontend-folder": "mkdir -p backend/static/frontend"
+  }
+}

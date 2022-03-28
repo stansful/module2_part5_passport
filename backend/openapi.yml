@@ -1,0 +1,132 @@
+openapi: 3.0.0
+servers:
+  - description: Dev server
+    url: http://localhost:5555
+  - description: Prod server
+    url: http://localhost:5555
+info:
+  version: "1.0.0"
+  title: Client project API Documentation
+tags:
+  - name: Auth
+    description: Authentificate user
+paths:
+  /login:
+    post:
+      tags:
+        - Auth
+      summary: authorize user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  description: user email
+                  type: string
+                password:
+                  description: user password
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMessage:
+                    type: string
+  /gallery:
+    get:
+      tags:
+        - Gallery
+      summary: gallery with query page parameters
+      parameters:
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: token
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '2'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                        path:
+                          type: string
+                          example: http://qwerty.com/images/1.jpeg
+                        metadata:
+                          type: object
+
+                  page:
+                    type: number
+                    example: 3
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMessage:
+                    type: string
+    post:
+      tags:
+        - Gallery
+      summary: upload picture to the server
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                picture:
+                  type: string
+                  format: binary
+      parameters:
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: token
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMessage:
+                    type: string

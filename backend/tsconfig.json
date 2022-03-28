@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictFunctionTypes": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "target": "ES2019",
+    "lib": ["ES2019", "esnext.asynciterable", "DOM"],
+    "outDir": "dist",
+    "rootDir": "./src",
+    "baseUrl": "./src",
+  },
+  "exclude": ["node_modules", "dist", ".git"]
+}
