@@ -28,7 +28,8 @@ class AuthService {
     const candidate: User = { email: req.body.email, password: req.body.password };
     try {
       await userService.create(candidate);
-      res.status(config.httpStatusCodes.CREATED).end();
+      const message = { message: 'Created' };
+      res.status(config.httpStatusCodes.CREATED).json(message);
     } catch (e) {
       const unAuthorizedMessage = { errorMessage: 'Email already exist' };
       res.status(config.httpStatusCodes.UNAUTHORIZED).json(unAuthorizedMessage);
