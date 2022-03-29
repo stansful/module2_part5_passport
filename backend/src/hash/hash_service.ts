@@ -1,5 +1,6 @@
 import { config } from '../config/config';
 import bcrypt from 'bcrypt';
+import { Unauthorized } from '../exception/http/unauthorized';
 
 class HashService {
   private readonly salt: number;
@@ -13,7 +14,10 @@ class HashService {
   }
 
   public async compare(data: string | Buffer, encryptedData: string) {
-    return bcrypt.compare(data, encryptedData);
+    const isValid = await bcrypt.compare(data, encryptedData);
+    if(!isValid) {
+      throw new Unauthorized('Invalid password');
+    }
   }
 }
 
