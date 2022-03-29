@@ -8,7 +8,7 @@ import { mongoDatabase } from './database/mongo_database';
 import { galleryService } from './gallery/gallery_service';
 import { userService } from './user/user_service';
 import { loggerService } from './logger/logger_service';
-import { sleep } from './helpers/sleep';
+import { sleep } from './utils/sleep';
 import { PassportStrategies } from './auth/passport_strategies';
 
 export class App {
