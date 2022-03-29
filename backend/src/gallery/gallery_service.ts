@@ -59,9 +59,16 @@ class GalleryService {
     const limit = Number(req.query.limit) || this.limit;
     const skip = requestPage * limit - limit;
 
+    let filter: Object = {};
+    const uploadedByUser = req.query.filter === 'true'
+    if (uploadedByUser) {
+      const user = <MongoResponseUser>req.user;
+      filter = { belongsTo: user._id };
+    }
+
     try {
       this.checkRequestPage(requestPage);
-      const allImages = await imageService.getAll({ skip, limit });
+      const allImages = await imageService.getAll(filter, { skip, limit });
       res.json({ objects: allImages, page: requestPage });
     } catch (error) {
       await loggerService.logger(`Failed to send gallery objects. ${error}`);

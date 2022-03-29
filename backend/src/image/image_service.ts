@@ -1,6 +1,7 @@
 import { Crud } from '../helpers/crud_interface';
-import { Image, ImageOptions } from './image_interface';
+import { Image } from './image_interface';
 import { imageModel } from './image_model';
+import mongoose from 'mongoose';
 
 class ImageService implements Crud<Image> {
   create = async (entity: Image): Promise<Image> => {
@@ -18,8 +19,8 @@ class ImageService implements Crud<Image> {
     return Boolean(image);
   }
 
-  async getAll(options: ImageOptions): Promise<Image[]> {
-    return imageModel.find({}).skip(options.skip).limit(options.limit);
+  async getAll(filter: mongoose.FilterQuery<Image>, options?: mongoose.QueryOptions): Promise<Image[]> {
+    return imageModel.find(filter, null, options);
   }
 
   async getOne(path: string): Promise<Image> {
