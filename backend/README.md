@@ -45,7 +45,7 @@
 │    ├── token
 │    │     └── token_service.ts
 │    └── user
-│          │── user_interface.ts
+│          │── user_interfaces.ts
 │          │── user_model.ts
 │          └── user_service.ts
 │

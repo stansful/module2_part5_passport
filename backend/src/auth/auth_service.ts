@@ -3,7 +3,7 @@ import { config } from '../config/config';
 import { tokenService } from '../token/token_service';
 import { userService } from '../user/user_service';
 import { loggerService } from '../logger/logger_service';
-import { User } from '../user/user_interface';
+import { User } from '../user/user_interfaces';
 
 class AuthService {
   public async validateToken(req: Request, res: Response, next: NextFunction) {
