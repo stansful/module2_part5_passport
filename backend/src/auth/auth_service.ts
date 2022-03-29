@@ -3,7 +3,7 @@ import { config } from '../config/config';
 import { tokenService } from '../token/token_service';
 import { userService } from '../user/user_service';
 import { loggerService } from '../logger/logger_service';
-import { User } from '../user/user_interfaces';
+import { MongoResponseUser, User } from '../user/user_interfaces';
 
 class AuthService {
   public async validateToken(req: Request, res: Response, next: NextFunction) {
@@ -19,8 +19,8 @@ class AuthService {
   }
 
   public signIn = async (req: Request, res: Response) => {
-    // @ts-ignore
-    const token = await tokenService.sign(req.user.email);
+    const user = <MongoResponseUser>req.user;
+    const token = await tokenService.sign(user.email);
     res.json({ token });
   };
 
