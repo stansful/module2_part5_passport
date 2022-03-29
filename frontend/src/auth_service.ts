@@ -1,4 +1,5 @@
 const form = document.querySelector('#form') as HTMLFormElement;
+const signUpButton = document.querySelector('#signUp') as HTMLButtonElement;
 
 const getUserInfo = (): User => {
   const emailInputElement = document.querySelector('#email') as HTMLInputElement;
@@ -29,7 +30,13 @@ const signIn = async (user: User) => {
   });
 };
 
-const submitEvent = async (event: Event) => {
+const signUp = async (user: User) => {
+  return httpPost<Message | ErrorMessage>(`${API_URL}/auth/signUp`, JSON.stringify(user), {
+    'Content-Type': 'application/json',
+  });
+};
+
+const signInEvent = async (event: Event) => {
   event.preventDefault();
 
   const user = getUserInfo();
@@ -47,8 +54,28 @@ const submitEvent = async (event: Event) => {
 
   setToken(response.token);
 
-  form.removeEventListener(EVENT_TYPES.submit, submitEvent);
+  signUpButton.removeEventListener(EVENT_TYPES.click, signUpEvent);
+  form.removeEventListener(EVENT_TYPES.submit, signInEvent);
   document.location.replace('./gallery.html');
 };
 
-form.addEventListener(EVENT_TYPES.submit, submitEvent);
+const signUpEvent = async (event: Event) => {
+  event.preventDefault();
+
+  const user = getUserInfo();
+  const valid = validate(user);
+
+  if (!valid) {
+    return alert(VALIDATION_FAILED);
+  }
+
+  const response = await signUp(user);
+
+  if ('errorMessage' in response) {
+    return alert(response.errorMessage);
+  }
+
+  alert(response.message);
+};
+signUpButton.addEventListener(EVENT_TYPES.click, signUpEvent);
+form.addEventListener(EVENT_TYPES.submit, signInEvent);

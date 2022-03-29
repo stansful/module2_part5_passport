@@ -21,3 +21,7 @@ interface Gallery {
 interface ErrorMessage {
   errorMessage: string;
 }
+
+interface Message {
+  message: string;
+}
