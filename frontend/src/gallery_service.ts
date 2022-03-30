@@ -14,21 +14,21 @@ const updateQueryParams = (pageNumber: string, limit: string, filter: string) =>
 const queryFilterButtonEvent = async () => {
   const currentState = queryFilterButton.checked;
   setFilter(currentState);
-  await showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
+  await showGalleryWrapper()
 };
 
 const nextButtonEvent = async () => {
   const currentPage = getCurrentPage();
   const newPage = Number(currentPage) + 1;
   setNewPage(newPage);
-  await showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
+  await showGalleryWrapper()
 };
 
 const previousButtonEvent = async () => {
   const currentPage = getCurrentPage();
   const newPage = Number(currentPage) - 1;
   setNewPage(newPage);
-  await showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
+  await showGalleryWrapper()
 };
 
 const sendingFormEvent = async (event: Event) => {
@@ -50,22 +50,22 @@ const sendingFormEvent = async (event: Event) => {
     console.log(error);
   }
   sendingFormSubmitInput.disabled = false;
-  alert('Image successfully uploaded')
+  alert('Image successfully uploaded');
 
-  await showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
+  await showGalleryWrapper()
 };
 
 const checkPageLimitsAndBorders = async (data: Gallery, page: string, filter: string) => {
   if (Number(page) === 1 && filter === 'true' && !data.objects.length) {
     alert(UPLOADED_PICTURES_NOT_FOUND);
     setFilter();
-    await showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
+    await showGalleryWrapper()
     return;
   }
   if (!data.objects.length || Number(page) < 1) {
     alert(PAGE_DOES_NOT_EXIST);
     setNewPage();
-    await showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
+    await showGalleryWrapper()
     return;
   }
 };
@@ -86,6 +86,11 @@ const showGallery = async (page: string, token: string, limit: string, filter: s
   }
 };
 
+const showGalleryWrapper = async () => {
+  return async () => await showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
+
+};
+
 const redirectToIndex = () => {
   removeToken();
   nextButton.removeEventListener(EVENT_TYPES.click, nextButtonEvent);
@@ -101,7 +106,7 @@ updateLimitIfChange();
 updatePageIfChange();
 updateFilterIfChange();
 
-showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
+showGalleryWrapper()
 
 nextButton.addEventListener(EVENT_TYPES.click, nextButtonEvent);
 previousButton.addEventListener(EVENT_TYPES.click, previousButtonEvent);
