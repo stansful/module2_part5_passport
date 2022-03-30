@@ -5,8 +5,3 @@ export interface Image {
   metadata: Object;
   belongsTo: Schema.Types.ObjectId | null;
 }
-
-export interface ImageOptions {
-  skip: number;
-  limit: number;
-}
