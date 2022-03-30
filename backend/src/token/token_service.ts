@@ -11,10 +11,6 @@ class TokenService {
   public async sign(data: string | object | Buffer, options?: jwt.SignOptions) {
     return jwt.sign(data, this.secretToken, options);
   }
-
-  public async verifyToken(token: string) {
-    return jwt.verify(token, this.secretToken);
-  }
 }
 
 export const tokenService = new TokenService();
