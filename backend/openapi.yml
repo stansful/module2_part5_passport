@@ -11,7 +11,7 @@ tags:
   - name: Auth
     description: Authentificate user
 paths:
-  /auth/signin:
+  /auth/signIn:
     post:
       tags:
         - Auth
@@ -51,7 +51,7 @@ paths:
                   errorMessage:
                     type: string
 
-  /auth/signup:
+  /auth/signUp:
     post:
       tags:
         - Auth
