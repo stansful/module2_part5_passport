@@ -12,13 +12,12 @@ export class PassportStrategies {
 
   constructor(passport: passport.PassportStatic) {
     this.passport = passport;
-    this.initializeStrategies();
+    this.serializeDeserialize();
   }
 
   public initializeStrategies() {
     this.local();
     this.jwt();
-    this.serializeDeserialize();
   };
 
   private serializeDeserialize() {
