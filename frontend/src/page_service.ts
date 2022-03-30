@@ -14,6 +14,14 @@ const setLimit = (value = '1') => {
   localStorage.setItem(LIMIT, value);
 };
 
+const getFilter = () => {
+  return localStorage.getItem(FILTER) || 'false';
+};
+
+const setFilter = (value = false) => {
+  localStorage.setItem(FILTER, `${value}`);
+};
+
 const updateLimitIfChange = () => {
   const limit = getLimit();
   const searchParams = new URLSearchParams(location.search);
@@ -36,5 +44,15 @@ const updatePageIfChange = () => {
   if (Number(queryPage) < 1) {
     alert(PAGE_DOES_NOT_EXIST);
     setNewPage();
+  }
+};
+
+const updateFilterIfChange = () => {
+  const filter = getFilter();
+  const searchParams = new URLSearchParams(location.search);
+  const queryFilter = searchParams.get('filter') || 'false';
+
+  if (filter !== queryFilter) {
+    setFilter(queryFilter === 'true');
   }
 };

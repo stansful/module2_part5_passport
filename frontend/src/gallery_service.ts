@@ -3,25 +3,32 @@ const previousButton = document.querySelector('#previous') as HTMLButtonElement;
 const nextButton = document.querySelector('#next') as HTMLButtonElement;
 const sendingForm = document.querySelector('#sending-form') as HTMLFormElement;
 const sendingFormSubmitInput = document.querySelector('#sending-form-submit') as HTMLInputElement;
+const queryFilterButton = document.querySelector('#queryFilter') as HTMLInputElement;
 
-const updateQueryParams = (pageNumber: string, limit: string) => {
-  if (location.search !== `?page=${pageNumber}&limit=${limit}`) {
-    location.search = `?page=${pageNumber}&limit=${limit}`;
+const updateQueryParams = (pageNumber: string, limit: string, filter: string) => {
+  if (location.search !== `?page=${pageNumber}&limit=${limit}&filter=${filter}`) {
+    location.search = `?page=${pageNumber}&limit=${limit}&filter=${filter}`;
   }
+};
+
+const queryFilterButtonEvent = async () => {
+  const currentState = queryFilterButton.checked;
+  setFilter(currentState);
+  await showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
 };
 
 const nextButtonEvent = async () => {
   const currentPage = getCurrentPage();
   const newPage = Number(currentPage) + 1;
   setNewPage(newPage);
-  await showGallery(getCurrentPage(), getToken(), getLimit());
+  await showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
 };
 
 const previousButtonEvent = async () => {
   const currentPage = getCurrentPage();
   const newPage = Number(currentPage) - 1;
   setNewPage(newPage);
-  await showGallery(getCurrentPage(), getToken(), getLimit());
+  await showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
 };
 
 const sendingFormEvent = async (event: Event) => {
@@ -44,23 +51,32 @@ const sendingFormEvent = async (event: Event) => {
   }
   sendingFormSubmitInput.disabled = false;
 
-  await showGallery(getCurrentPage(), getToken(), getLimit());
+  await showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
 };
 
-const showGallery = async (page: string, token: string, limit: string) => {
-  updateQueryParams(page, limit);
+const checkPageLimitsAndBorders = async (data: Gallery, page: string, filter: string) => {
+  if (Number(page) === 1 && filter === 'true' && !data.objects.length) {
+    alert(UPLOADED_PICTURES_NOT_FOUND);
+    setFilter();
+    await showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
+    return;
+  }
+  if (!data.objects.length || Number(page) < 1) {
+    alert(PAGE_DOES_NOT_EXIST);
+    setNewPage();
+    await showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
+    return;
+  }
+};
+
+const showGallery = async (page: string, token: string, limit: string, filter: string) => {
+  updateQueryParams(page, limit, filter);
+  queryFilterButton.checked = filter === 'true';
 
   try {
-    const data = await httpGet<Gallery>(`${API_URL}/gallery?page=${page}&limit=${limit}`, token);
-
-    if (!data.objects.length || Number(page) < 1) {
-      alert(PAGE_DOES_NOT_EXIST);
-      setNewPage();
-      await showGallery(getCurrentPage(), getToken(), getLimit());
-      return;
-    }
+    const data = await httpGet<Gallery>(`${API_URL}/gallery?page=${page}&limit=${limit}&filter=${filter}`, token);
+    await checkPageLimitsAndBorders(data, page, filter);
     gallery.innerHTML = '';
-
     data.objects.forEach(
       (imgLink) => (gallery.innerHTML += `<img src='${imgLink.path}' width='200' height='200' alt='img'>`),
     );
@@ -74,6 +90,7 @@ const redirectToIndex = () => {
   nextButton.removeEventListener(EVENT_TYPES.click, nextButtonEvent);
   previousButton.removeEventListener(EVENT_TYPES.click, previousButtonEvent);
   sendingForm.removeEventListener(EVENT_TYPES.submit, sendingFormEvent);
+  queryFilterButton.removeEventListener(EVENT_TYPES.click, queryFilterButtonEvent);
   return document.location.replace('./index.html');
 };
 
@@ -81,9 +98,11 @@ removeTokenWithTimeout();
 
 updateLimitIfChange();
 updatePageIfChange();
+updateFilterIfChange();
 
-showGallery(getCurrentPage(), getToken(), getLimit());
+showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
 
 nextButton.addEventListener(EVENT_TYPES.click, nextButtonEvent);
 previousButton.addEventListener(EVENT_TYPES.click, previousButtonEvent);
 sendingForm.addEventListener(EVENT_TYPES.submit, sendingFormEvent);
+queryFilterButton.addEventListener(EVENT_TYPES.click, queryFilterButtonEvent);
