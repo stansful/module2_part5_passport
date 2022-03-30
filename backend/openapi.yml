@@ -11,11 +11,11 @@ tags:
   - name: Auth
     description: Authentificate user
 paths:
-  /login:
+  /auth/signin:
     post:
       tags:
         - Auth
-      summary: authorize user
+      summary: authentificate user
       requestBody:
         content:
           application/json:
@@ -50,6 +50,48 @@ paths:
                 properties:
                   errorMessage:
                     type: string
+
+  /auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: create user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  description: user email
+                  type: string
+                password:
+                  description: user password
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMessage:
+                    type: string
+
+
   /gallery:
     get:
       tags:
