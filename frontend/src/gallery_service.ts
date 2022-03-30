@@ -50,6 +50,7 @@ const sendingFormEvent = async (event: Event) => {
     console.log(error);
   }
   sendingFormSubmitInput.disabled = false;
+  alert('Image successfully uploaded')
 
   await showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
 };
