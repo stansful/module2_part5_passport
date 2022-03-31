@@ -14,21 +14,21 @@ const updateQueryParams = (pageNumber: string, limit: string, filter: string) =>
 const queryFilterButtonEvent = async () => {
   const currentState = queryFilterButton.checked;
   setFilter(currentState);
-  await showGalleryWrapper();
+  await showGallery();
 };
 
 const nextButtonEvent = async () => {
   const currentPage = getCurrentPage();
   const newPage = Number(currentPage) + 1;
   setNewPage(newPage);
-  await showGalleryWrapper();
+  await showGallery();
 };
 
 const previousButtonEvent = async () => {
   const currentPage = getCurrentPage();
   const newPage = Number(currentPage) - 1;
   setNewPage(newPage);
-  await showGalleryWrapper();
+  await showGallery();
 };
 
 const sendingFormEvent = async (event: Event) => {
@@ -46,34 +46,38 @@ const sendingFormEvent = async (event: Event) => {
     await apiRequest.post<Response>(`/gallery`, formData, getToken());
   } catch (error) {
     console.log(error);
+    return alert('Upload failed')
   }
   sendingFormSubmitInput.disabled = false;
   alert('Image successfully uploaded');
 
-  await showGalleryWrapper();
+  await showGallery();
 };
 
 const checkPageLimitsAndBorders = async (data: Gallery, page: string, filter: string) => {
   if (Number(page) === 1 && filter === 'true' && !data.objects.length) {
     alert(UPLOADED_PICTURES_NOT_FOUND);
     setFilter();
-    await showGalleryWrapper();
+    await showGallery();
     return;
   }
   if (!data.objects.length || Number(page) < 1) {
     alert(PAGE_DOES_NOT_EXIST);
     setNewPage();
-    await showGalleryWrapper();
+    await showGallery();
     return;
   }
 };
 
-const showGallery = async (page: string, token: string, limit: string, filter: string) => {
+const showGallery = async (page = getCurrentPage(), limit = getLimit(), filter = getFilter()) => {
+  const url = new URL(document.URL);
+  const query = url.search
+
   updateQueryParams(page, limit, filter);
   queryFilterButton.checked = filter === 'true';
 
   try {
-    const data = await apiRequest.get<Gallery>(`/gallery?page=${page}&limit=${limit}&filter=${filter}`, token);
+    const data = await apiRequest.get<Gallery>(`/gallery${query}`);
     await checkPageLimitsAndBorders(data, page, filter);
     gallery.innerHTML = '';
     data.objects.forEach(
@@ -82,10 +86,6 @@ const showGallery = async (page: string, token: string, limit: string, filter: s
   } catch (e) {
     console.log(e);
   }
-};
-
-const showGalleryWrapper = async () => {
-  await showGallery(getCurrentPage(), getToken(), getLimit(), getFilter());
 };
 
 const redirectToIndex = () => {
@@ -103,7 +103,7 @@ updateLimitIfChange();
 updatePageIfChange();
 updateFilterIfChange();
 
-showGalleryWrapper();
+showGallery();
 
 nextButton.addEventListener(EVENT_TYPES.click, nextButtonEvent);
 previousButton.addEventListener(EVENT_TYPES.click, previousButtonEvent);
