@@ -1,20 +1,39 @@
-const httpPost = async <ResponseData>(url = '', data: string | FormData, headers: any): Promise<ResponseData> => {
-  const response = await fetch(url, {
-    method: 'POST',
-    headers,
-    body: data,
-  });
+class HttpService {
+  private readonly apiUrl: string;
 
-  return response.json();
-};
+  constructor() {
+    this.apiUrl = API_URL;
+  }
 
-const httpGet = async <ResponseData>(path = '', token = ''): Promise<ResponseData> => {
-  const response = await fetch(path, {
-    method: 'GET',
-    headers: {
-      Authorization: token,
-    },
-  });
+  public async get<ResponseData>(path = '', token = ''): Promise<ResponseData> {
+    const response = await fetch(this.apiUrl + path, {
+      method: 'GET',
+      headers: {
+        Authorization: token,
+      },
+    });
+    return response.json();
+  };
 
-  return response.json();
-};
+  public async post<ResponseData>(path = '', data: Object | FormData, token = ''): Promise<ResponseData | Response> {
+    if (data instanceof FormData) {
+      return fetch(this.apiUrl + path, {
+        method: 'POST',
+        headers: { Authorization: token },
+        body: data,
+      });
+    }
+
+    const response = await fetch(this.apiUrl + path, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  }
+}
+
+const apiRequest = new HttpService();
