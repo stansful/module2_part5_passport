@@ -9,6 +9,7 @@ import { BadRequest } from '../exception/http/bad_request';
 import { PicturePaths } from './gallery_interfaces';
 import { Image } from '../image/image_interface';
 import { MongoResponseUser } from '../user/user_interfaces';
+import { Schema } from 'mongoose';
 
 class GalleryService {
   private readonly limit: number;
@@ -59,11 +60,11 @@ class GalleryService {
     const limit = Number(req.query.limit) || this.limit;
     const skip = requestPage * limit - limit;
 
-    let filter: Object = {};
-    const uploadedByUser = req.query.filter === 'true'
+    const filter: {belongsTo: null | Schema.Types.ObjectId} = { belongsTo: null };
+    const uploadedByUser = req.query.filter === 'true';
     if (uploadedByUser) {
       const user = <MongoResponseUser>req.user;
-      filter = { belongsTo: user._id };
+      filter.belongsTo = user._id;
     }
 
     try {
