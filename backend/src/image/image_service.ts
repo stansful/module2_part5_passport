@@ -1,7 +1,7 @@
 import { Crud } from '../helpers/crud_interface';
 import { Image } from './image_interface';
 import { imageModel } from './image_model';
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 class ImageService implements Crud<Image> {
   create = async (entity: Image): Promise<Image> => {
@@ -19,8 +19,8 @@ class ImageService implements Crud<Image> {
     return Boolean(image);
   }
 
-  async getAll(filter: mongoose.FilterQuery<Image>, options?: mongoose.QueryOptions): Promise<Image[]> {
-    return imageModel.find(filter, null, options);
+  async getAll(options?: mongoose.QueryOptions): Promise<Image[]> {
+    return imageModel.find({}, null, options);
   }
 
   async getOne(path: string): Promise<Image> {
@@ -29,6 +29,10 @@ class ImageService implements Crud<Image> {
       throw new Error('Image does not exist');
     }
     return image;
+  }
+
+  async getByUserId(id: Schema.Types.ObjectId, options?: mongoose.QueryOptions): Promise<Image[]> {
+    return imageModel.find({ belongsTo: id }, null, options);
   }
 }
 

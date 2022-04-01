@@ -9,7 +9,6 @@ import { BadRequest } from '../exception/http/bad_request';
 import { PicturePaths } from './gallery_interfaces';
 import { Image } from '../image/image_interface';
 import { MongoResponseUser } from '../user/user_interfaces';
-import { Schema } from 'mongoose';
 
 class GalleryService {
   private readonly limit: number;
@@ -59,17 +58,17 @@ class GalleryService {
     const requestPage = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || this.limit;
     const skip = requestPage * limit - limit;
-
-    const filter: {belongsTo: null | Schema.Types.ObjectId} = { belongsTo: null };
-    const uploadedByUser = req.query.filter === 'true';
-    if (uploadedByUser) {
-      const user = <MongoResponseUser>req.user;
-      filter.belongsTo = user._id;
-    }
+    const user = <MongoResponseUser>req.user;
+    let allImages: Image[];
 
     try {
       this.checkRequestPage(requestPage);
-      const allImages = await imageService.getAll(filter, { skip, limit });
+      const uploadedByUser = req.query.filter === 'true';
+      if (uploadedByUser) {
+        allImages = await imageService.getByUserId(user._id, { skip, limit });
+      } else {
+        allImages = await imageService.getAll({ skip, limit });
+      }
       res.json({ objects: allImages, page: requestPage });
     } catch (error) {
       await loggerService.logger(`Failed to send gallery objects. ${error}`);
