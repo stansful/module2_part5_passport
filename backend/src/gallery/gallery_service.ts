@@ -80,7 +80,7 @@ class GalleryService {
     const picturePath = req.file?.path || '';
     const filename = req.file?.filename || '';
     const fileOriginalName = req.file?.originalname || '';
-    const newFileName = filename + '_' + fileOriginalName;
+    const newFileName = (filename + '_' + fileOriginalName).toLowerCase();
     const newFilePath = path.join(this.picturesPath, newFileName);
     const user = <MongoResponseUser>req.user;
 
