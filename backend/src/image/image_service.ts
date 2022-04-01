@@ -20,7 +20,7 @@ class ImageService implements Crud<Image> {
   }
 
   async getAll(options?: mongoose.QueryOptions): Promise<Image[]> {
-    return imageModel.find({}, null, options);
+    return imageModel.find({ belongsTo: null }, null, options);
   }
 
   async getOne(path: string): Promise<Image> {
