@@ -33,7 +33,7 @@ const signUpEvent = async (event: Event) => {
     return alert(VALIDATION_FAILED);
   }
 
-  const response = await apiRequest.post<Message | ErrorMessage>(`/auth/signUp`, user);
+  const response: Message | ErrorMessage = await apiRequest.post(`/auth/signUp`, user);
 
   if ('errorMessage' in response) {
     return alert(response.errorMessage);
@@ -53,7 +53,7 @@ const signInEvent = async (event: Event) => {
     return alert(VALIDATION_FAILED);
   }
 
-  const response = await apiRequest.post<Token | ErrorMessage>(`/auth/signIn`, user);
+  const response: Token | ErrorMessage = await apiRequest.post(`/auth/signIn`, user);
 
   if ('errorMessage' in response) {
     return alert(response.errorMessage);

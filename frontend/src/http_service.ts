@@ -5,7 +5,7 @@ class HttpService {
     this.apiUrl = API_URL;
   }
 
-  public async get<ResponseData>(path = '', token = getToken()): Promise<ResponseData> {
+  public async get(path = '', token = getToken()) {
     const response = await fetch(this.apiUrl + path, {
       method: 'GET',
       headers: {
@@ -15,7 +15,7 @@ class HttpService {
     return response.json();
   };
 
-  public async post<ResponseData>(path = '', data: Object | FormData, token = getToken()): Promise<ResponseData | Response> {
+  public async post(path = '', data: Object | FormData, token = getToken()) {
     if (data instanceof FormData) {
       return fetch(this.apiUrl + path, {
         method: 'POST',

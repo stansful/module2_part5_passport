@@ -43,10 +43,10 @@ const sendingFormEvent = async (event: Event) => {
 
   sendingFormSubmitInput.disabled = true;
   try {
-    await apiRequest.post<Response>(`/gallery`, formData, getToken());
+    await apiRequest.post(`/gallery`, formData, getToken());
   } catch (error) {
     console.log(error);
-    return alert('Upload failed')
+    return alert('Upload failed');
   }
   sendingFormSubmitInput.disabled = false;
   alert('Image successfully uploaded');
@@ -71,13 +71,13 @@ const checkPageLimitsAndBorders = async (data: Gallery, page: string, filter: st
 
 const showGallery = async (page = getCurrentPage(), limit = getLimit(), filter = getFilter()) => {
   const url = new URL(document.URL);
-  const query = url.search
+  const query = url.search;
 
   updateQueryParams(page, limit, filter);
   queryFilterButton.checked = filter === 'true';
 
   try {
-    const data = await apiRequest.get<Gallery>(`/gallery${query}`);
+    const data: Gallery = await apiRequest.get(`/gallery${query}`);
     await checkPageLimitsAndBorders(data, page, filter);
     gallery.innerHTML = '';
     data.objects.forEach(
