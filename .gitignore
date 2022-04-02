@@ -1,5 +1,6 @@
 .idea
 .git
+node_modules
 backend/.idea
 backend/.git
 backend/dist

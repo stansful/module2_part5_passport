@@ -1,9 +1,7 @@
+import { Schema } from 'mongoose';
+
 export interface Image {
   path: string;
   metadata: Object;
-}
-
-export interface ImageOptions {
-  skip: number;
-  limit: number;
+  belongsTo: Schema.Types.ObjectId | null;
 }

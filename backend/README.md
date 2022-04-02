@@ -10,7 +10,8 @@
 ├── src
 │    │── auth
 │    │     │── auth_service.ts
-│    │     └── auth_controller.ts
+│    │     │── auth_controller.ts
+│    │     └── passport_strategies.ts
 │    │── configs
 │    │     │── config.ts
 │    │     └── config_interface.ts
@@ -29,7 +30,8 @@
 │    │── fs
 │    │    └── fs_service.ts
 │    ├── gallery
-│    │     │── gallery_interface.ts
+│    │     │── gallery_controller.ts
+│    │     │── gallery_interfaces.ts
 │    │     └── gallery_service.ts
 │    │── hash
 │    │     └── hash_service.ts
@@ -44,10 +46,12 @@
 │    │     └── logger_service.ts
 │    ├── token
 │    │     └── token_service.ts
-│    └── user
-│          │── user_interface.ts
-│          │── user_model.ts
-│          └── user_service.ts
+│    │── user
+│    │     │── user_interfaces.ts
+│    │     │── user_model.ts
+│    │     └── user_service.ts
+│    └── utils
+│          └── sleep.ts
 │
 ├── static                                  -| folder with static files
 │    │── pictures

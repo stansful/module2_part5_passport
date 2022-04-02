@@ -36,7 +36,7 @@ body {
 }
 
 .input {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     padding: 10px;
     border-bottom: 2px solid var(--blue-color);
 }
@@ -47,6 +47,7 @@ body {
 }
 
 .button {
+    margin-top: 10px;
     border-radius: 30px;
     border: 2px solid var(--blue-color);
     background-color: white;

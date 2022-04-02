@@ -1,4 +1,5 @@
 import express from 'express';
+import passport from 'passport';
 import { NotFound } from './exception/http/not_found';
 import { Controller } from './helpers/controller_interface';
 import { config } from './config/config';
@@ -7,7 +8,8 @@ import { mongoDatabase } from './database/mongo_database';
 import { galleryService } from './gallery/gallery_service';
 import { userService } from './user/user_service';
 import { loggerService } from './logger/logger_service';
-import { sleep } from './helpers/sleep';
+import { sleep } from './utils/sleep';
+import { PassportStrategies } from './auth/passport_strategies';
 
 export class App {
   public app: express.Express;
@@ -36,6 +38,7 @@ export class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(loggerService.logger);
+    this.app.use(passport.initialize());
   }
 
   private initializeStatic() {
@@ -87,6 +90,10 @@ export class App {
     console.log('Adding dev users to DB');
     await loggerService.logger('Adding test users to DB...');
     await userService.addDevUsers();
+
+    console.log('Initializing passport strategies');
+    await loggerService.logger('Initializing passport strategies...');
+    new PassportStrategies(passport).initializeStrategies();
   };
 
   public listen() {

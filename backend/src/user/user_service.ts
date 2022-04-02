@@ -1,4 +1,4 @@
-import { User } from './user_interface';
+import { User } from './user_interfaces';
 import { userModel } from './user_model';
 import { Crud } from '../helpers/crud_interface';
 import { hashService } from '../hash/hash_service';
